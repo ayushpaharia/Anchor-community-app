@@ -1,7 +1,10 @@
 import { validate, isEmpty } from "class-validator";
 import { Request, Response } from "express";
-import { User } from "../entities/User";
 import bcrypt from "bcrypt";
+import config from "config";
+
+import { User } from "../entities/User";
+import { sign } from "../utils/jwt.utils";
 
 export const registerUserHandler = async (req: Request, res: Response) => {
   const { email, username, password } = req.body;
@@ -40,17 +43,29 @@ export const loginUserHandler = async (req: Request, res: Response) => {
   const { username, password } = req.body;
 
   try {
+    const validationErrors: string[] = [];
+    if (isEmpty(username)) validationErrors.push("Username must not be empty");
+    if (isEmpty(password)) validationErrors.push("Password must not be empty");
+    if (validationErrors.length > 0)
+      return res.status(400).json({ errors: validationErrors });
+
     // TODO: Find User
-    const user = await User.findOne({ username });
-    if (!user) return res.status(404).json({ error: "User not found" });
+    const registeredUser = await User.findOne({ username });
+    if (!registeredUser)
+      return res.status(404).json({ error: "User not found" });
 
     // TODO: Compare Password
-    const passwordMatch = await bcrypt.compare(password, user.password);
+    const passwordMatch = await bcrypt.compare(
+      password,
+      registeredUser.password
+    );
     if (!passwordMatch)
       res.status(401).json({ password: "Password is incorrect" });
 
+    const token = sign({ username });
+
     // TODO: Return User
-    return res.status(200).json({ user });
+    return res.status(200).json({ user: registeredUser, token });
   } catch (error) {
     console.log(error);
     return res.status(500).json(error);
