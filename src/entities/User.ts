@@ -1,4 +1,4 @@
-import { IsEmail, Min } from "class-validator";
+import { IsEmail, Length } from "class-validator";
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -7,7 +7,11 @@ import {
   Index,
   CreateDateColumn,
   UpdateDateColumn,
+  BeforeInsert,
 } from "typeorm";
+import bcrypt from "bcrypt";
+import config from "config";
+import { classToPlain, Exclude } from "class-transformer";
 
 @Entity("users")
 export class User extends BaseEntity {
@@ -15,6 +19,7 @@ export class User extends BaseEntity {
     super();
     Object.assign(this, user);
   }
+  @Exclude()
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -24,12 +29,13 @@ export class User extends BaseEntity {
   email: string;
 
   @Index()
-  @Min(3, { message: "Username must be 3 charcters or longer" })
+  @Length(3, 255, { message: "Username must be 3 charcters or longer" })
   @Column({ unique: true })
   username: string;
 
+  @Exclude()
   @Column()
-  @Min(6)
+  @Length(6)
   password: string;
 
   @CreateDateColumn()
@@ -37,4 +43,15 @@ export class User extends BaseEntity {
 
   @UpdateDateColumn()
   updateAt: Date;
+
+  @BeforeInsert()
+  async hashWithBCryptc() {
+    const salt = await bcrypt.genSalt(config.get("saltWorkFactor"));
+
+    this.password = bcrypt.hashSync(this.password, salt);
+  }
+
+  toJSON() {
+    return classToPlain(this);
+  }
 }
