@@ -13,6 +13,14 @@ import bcrypt from "bcrypt";
 import config from "config";
 import { classToPlain, Exclude } from "class-transformer";
 
+export interface UserDocument {
+  email: string;
+  name: string;
+  password: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
 @Entity("users")
 export class User extends BaseEntity {
   constructor(user: Partial<User>) {

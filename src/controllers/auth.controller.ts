@@ -2,6 +2,7 @@ import { validate, isEmpty } from "class-validator";
 import { Request, Response } from "express";
 import bcrypt from "bcrypt";
 import config from "config";
+import cookie from "cookie";
 
 import { User } from "../entities/User";
 import { sign } from "../utils/jwt.utils";
@@ -10,7 +11,7 @@ export const registerUserHandler = async (req: Request, res: Response) => {
   const { email, username, password } = req.body;
 
   try {
-    // TODO: Validate Data
+    // Validate Data
     const validationErrors: string[] = [];
     if (await User.findOne({ email }))
       validationErrors.push("Email already taken");
@@ -20,7 +21,7 @@ export const registerUserHandler = async (req: Request, res: Response) => {
       return res.status(400).json({ errors: validationErrors });
     }
 
-    // TODO: Create the user
+    // Create the user
     // const user = User.create({});
     const user = new User({ email, password, username });
 
@@ -30,7 +31,7 @@ export const registerUserHandler = async (req: Request, res: Response) => {
 
     await user.save();
 
-    // TODO: Return the user
+    // Return the user
     return res.status(200).json(user);
   } catch (error) {
     console.log(error);
@@ -49,12 +50,12 @@ export const loginUserHandler = async (req: Request, res: Response) => {
     if (validationErrors.length > 0)
       return res.status(400).json({ errors: validationErrors });
 
-    // TODO: Find User
+    // Find User
     const registeredUser = await User.findOne({ username });
     if (!registeredUser)
       return res.status(404).json({ error: "User not found" });
 
-    // TODO: Compare Password
+    // Compare Password
     const passwordMatch = await bcrypt.compare(
       password,
       registeredUser.password
@@ -64,7 +65,19 @@ export const loginUserHandler = async (req: Request, res: Response) => {
 
     const token = sign({ username });
 
-    // TODO: Return User
+    // Set token in a cookie
+    res.set(
+      "Set-Cookie",
+      cookie.serialize("token", token, {
+        httpOnly: true,
+        secure: config.get("node_env") === "development",
+        sameSite: "strict",
+        maxAge: 3600,
+        path: "/",
+      })
+    );
+
+    // Return User
     return res.status(200).json({ user: registeredUser, token });
   } catch (error) {
     console.log(error);
