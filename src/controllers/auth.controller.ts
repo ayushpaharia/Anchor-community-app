@@ -40,8 +40,6 @@ export const registerUserHandler = async (req: Request, res: Response) => {
 };
 
 export const loginUserHandler = async (req: Request, res: Response) => {
-  const { username, email, password } = req.body;
-
   try {
     // Find if User exists
     const { existingUser } = await findExistingUser(req.body, "login");
@@ -49,18 +47,21 @@ export const loginUserHandler = async (req: Request, res: Response) => {
     if (!existingUser) return res.status(404).json({ error: "User not found" });
 
     // Compare Password
-    const passwordMatch = await bcrypt.compare(password, existingUser.password);
+    const passwordMatch = await bcrypt.compare(
+      req.body.password,
+      existingUser.password
+    );
     if (!passwordMatch)
       res.status(401).json({ password: "Password is incorrect" });
 
     const token = sign(
-      { username },
+      { username: existingUser.username },
       {
         expiresIn: "2h",
       }
     );
 
-    // Set token in a cookie
+    // Set token in a cookies
     res.set(
       "Set-Cookie",
       cookie.serialize("token", token, {
@@ -73,7 +74,7 @@ export const loginUserHandler = async (req: Request, res: Response) => {
     );
 
     // Return User
-    return res.status(200).json({ user: existingUser, token });
+    return res.status(200).json({ user: existingUser });
   } catch (error) {
     console.log(error);
     return res.status(500).json(error);

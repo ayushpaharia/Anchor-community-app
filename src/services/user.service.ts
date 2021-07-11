@@ -15,7 +15,6 @@ export async function findExistingUser(query: User, method?: string) {
       errors.push("User with this username already exists!");
 
     const isErrorFound = errors.length > 0;
-
     return {
       existingUser: isErrorFound && method !== "login" ? null : existingUser,
       errors: method === "login" ? null : errors,

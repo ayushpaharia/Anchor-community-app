@@ -4,7 +4,7 @@ import config from "config";
 import morgan from "morgan";
 import express, { Response } from "express";
 
-import { authRoutes } from "./routes";
+import { authRoutes, profileRoutes } from "./routes";
 import trim from "./middlewares/trim";
 import cookieParser from "cookie-parser";
 
@@ -26,6 +26,7 @@ app.get("/", (_, res: Response) => {
 
 // Routes
 app.use("/api/auth", authRoutes);
+app.use("/api/profile", profileRoutes);
 
 console.clear();
 app.listen(port, async () => {
