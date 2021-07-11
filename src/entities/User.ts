@@ -1,4 +1,4 @@
-import { IsEmail, Length } from "class-validator";
+import { IsEmail, Length, Matches, IsNotEmpty } from "class-validator";
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -13,14 +13,6 @@ import bcrypt from "bcrypt";
 import config from "config";
 import { classToPlain, Exclude } from "class-transformer";
 
-export interface UserDocument {
-  email: string;
-  name: string;
-  password: string;
-  createdAt: Date;
-  updatedAt: Date;
-}
-
 @Entity("users")
 export class User extends BaseEntity {
   constructor(user: Partial<User>) {
@@ -32,26 +24,38 @@ export class User extends BaseEntity {
   id: number;
 
   @Index()
-  @IsEmail()
+  @IsNotEmpty({ message: "Must have an email property" })
+  @IsEmail({}, { message: "Must be a valid email" })
   @Column({ unique: true })
   email: string;
 
   @Index()
-  @Length(3, 255, { message: "Username must be 3 charcters or longer" })
+  @IsNotEmpty({ message: "Must have an username property" })
+  @Length(3, 255, {
+    message: "Username is too short - should be 3 characters or longer",
+  })
   @Column({ unique: true })
   username: string;
 
   @Exclude()
   @Column()
-  @Length(6)
+  @IsNotEmpty({ message: "Must have an password property" })
+  @Length(6, 255, {
+    message: "Password is too short - should be 6 characters or longer",
+  })
+  @Matches(/^[a-zA-Z0-9._-]*$/, {
+    message:
+      "Password can only contain alphabets, numbers , underscores, periods and dashes",
+  })
   password: string;
 
   @CreateDateColumn()
-  createAt: Date;
+  createdAt: Date;
 
   @UpdateDateColumn()
-  updateAt: Date;
+  updatedAt: Date;
 
+  // Hashes password before saving
   @BeforeInsert()
   async hashWithBCryptc() {
     const salt = await bcrypt.genSalt(config.get("saltWorkFactor"));

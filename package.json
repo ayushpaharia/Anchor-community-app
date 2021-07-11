@@ -11,6 +11,7 @@
     "@types/lodash": "^4.14.171",
     "@types/morgan": "^1.9.3",
     "@types/node": "^16.0.1",
+    "@types/yup": "^0.29.13",
     "morgan": "^1.10.0",
     "ts-node": "^10.0.0",
     "ts-node-dev": "^1.1.8",
@@ -31,7 +32,8 @@
     "lodash": "^4.17.21",
     "pg": "^8.4.0",
     "reflect-metadata": "^0.1.10",
-    "typeorm": "0.2.34"
+    "typeorm": "0.2.34",
+    "yup": "^0.32.9"
   },
   "scripts": {
     "start": "ts-node src/server.ts",
