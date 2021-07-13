@@ -16,8 +16,8 @@ export async function findExistingUser(query: User, method?: string) {
 
     const isErrorFound = errors.length > 0;
     return {
-      existingUser: isErrorFound && method !== "login" ? null : existingUser,
-      errors: method === "login" ? null : errors,
+      existingUser: isErrorFound && method !== "return" ? null : existingUser,
+      errors: method === "return" ? null : errors,
     };
   } catch (err) {
     throw new Error(err);

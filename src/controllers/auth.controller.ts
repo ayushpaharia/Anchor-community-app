@@ -42,7 +42,7 @@ export const registerUserHandler = async (req: Request, res: Response) => {
 export const loginUserHandler = async (req: Request, res: Response) => {
   try {
     // Find if User exists
-    const { existingUser } = await findExistingUser(req.body, "login");
+    const { existingUser } = await findExistingUser(req.body, "return");
 
     if (!existingUser) return res.status(404).json({ error: "User not found" });
 
