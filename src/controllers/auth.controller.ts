@@ -57,7 +57,7 @@ export const loginUserHandler = async (req: Request, res: Response) => {
     const token = sign(
       { username: existingUser.username },
       {
-        expiresIn: "2h",
+        expiresIn: "1h",
       }
     );
 
@@ -68,7 +68,7 @@ export const loginUserHandler = async (req: Request, res: Response) => {
         httpOnly: true,
         secure: config.get("node_env") === "development",
         sameSite: "strict",
-        maxAge: 7200,
+        maxAge: 3600,
         path: "/",
       })
     );

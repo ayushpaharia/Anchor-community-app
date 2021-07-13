@@ -1,4 +1,4 @@
-import { Router } from "express";
+import { NextFunction, Request, Response, Router } from "express";
 import { getProfileHandler } from "../controllers/profile.controller";
 
 const profileRoutes = Router();
