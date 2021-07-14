@@ -5,7 +5,7 @@ import morgan from "morgan";
 import express, { Response } from "express";
 import cookieParser from "cookie-parser";
 
-import { authRoutes, postRoutes } from "./routes";
+import { authRoutes, postRoutes, subRoutes } from "./routes";
 import trim from "./middlewares/trim";
 
 const app = express();
@@ -27,12 +27,15 @@ app.get("/", (_, res: Response) => {
 // Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/posts", postRoutes);
+app.use("/api/subs", subRoutes);
 
 console.clear();
 app.listen(port, async () => {
   try {
     await createConnection();
-    console.log("Database Connected!");
+    console.log(
+      `Database Connected!\nServer listing at http://${host}:${port}/`
+    );
   } catch (error) {
     console.log(error);
   }

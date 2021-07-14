@@ -28,7 +28,7 @@ authRoutes.post("/login", loginUserHandler);
 authRoutes.get("/me", isAuthenticated, getMyProfileHandler);
 
 /**
- * @route   GET /api/auth/me
+ * @route   GET /api/auth/logout
  * @desc    Login a user
  */
 authRoutes.get("/logout", isAuthenticated, logoutHandler);

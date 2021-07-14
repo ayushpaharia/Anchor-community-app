@@ -7,6 +7,7 @@ import User from "../entities/User";
 import { sign } from "../utils/jwt.utils";
 import { findExistingUser } from "../services/user.service";
 import { validate } from "class-validator";
+import { omit } from "lodash";
 
 export const registerUserHandler = async (req: Request, res: Response) => {
   const { email, username, password, passwordConfirmation } = req.body;
@@ -74,7 +75,9 @@ export const loginUserHandler = async (req: Request, res: Response) => {
     );
 
     // Return User
-    return res.status(200).json({ user: existingUser });
+    return res
+      .status(200)
+      .json({ user: omit(existingUser.toJSON(), ["createdAt", "updatedAt"]) });
   } catch (error) {
     console.log(error);
     return res.status(500).json(error);

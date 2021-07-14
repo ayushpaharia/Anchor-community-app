@@ -6,36 +6,38 @@ import {
   editPostHandler,
   deletePostHandler,
 } from "../controllers/post.controller";
+import isAuthenticated from "../middlewares/isAuthenticated";
 // import isAuthenticated from "../middlewares/isAuthenticated";
 
 const postRoutes = Router();
 
 /**
- * @route   POST /api/posts/create
+ * @route   POST /api/posts
  * @desc    Create a post
  */
-postRoutes.post("/", createPostHandler);
+postRoutes.post("/", isAuthenticated, createPostHandler);
 
 /**
  * @route   GET /api/posts/:postid
  * @desc    Get a single post
  */
 postRoutes.get("/:postid", getPostHandler);
+
 /**
- * @route   GET ALL /api/posts/:postid
+ * @route   GET ALL /api/posts
  * @desc    Get all posts
  */
 postRoutes.get("/", getAllPostHandler);
 
 /**
- * @route   GET /api/auth/me
+ * @route   PUT /api/posts/:postid
  * @desc    Edit one post
  */
 postRoutes.put("/:postid", editPostHandler);
 
 /**
- * @route   GET /api/auth/me
- * @desc    Login a user
+ * @route   DELETE /api/posts/:postid
+ * @desc    Delete a post
  */
 postRoutes.delete("/:postid", deletePostHandler);
 

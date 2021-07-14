@@ -10,9 +10,9 @@ import bcrypt from "bcrypt";
 import config from "config";
 import { Exclude } from "class-transformer";
 
-import DefaultCoulmnsEntity from "./Entity";
-// import { postRoutes } from "../routes";
-// import { Post } from "./Post";
+import DefaultCoulmnsEntity from "./DefaultColumnsEntity";
+import { postRoutes } from "../routes";
+import { Post } from "./Post";
 
 @typeorm_Entity("users")
 export default class User extends DefaultCoulmnsEntity {
@@ -47,8 +47,8 @@ export default class User extends DefaultCoulmnsEntity {
   })
   password: string;
 
-  // @OneToMany(() => Post, (post) => post.user)
-  // posts: Post[];
+  @OneToMany(() => Post, (post) => post.user)
+  posts: Post[];
 
   // Hashes password before saving
   @BeforeInsert()

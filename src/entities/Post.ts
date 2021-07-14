@@ -1,41 +1,56 @@
-// import { IsNotEmpty } from "class-validator";
-// import {
-//   Column,
-//   Entity as typeormEntity,
-//   Index,
-//   JoinColumn,
-//   ManyToMany,
-//   ManyToOne,
-// } from "typeorm";
+import { IsNotEmpty } from "class-validator";
+import {
+  BeforeInsert,
+  Column,
+  Entity as typeormEntity,
+  Index,
+  JoinColumn,
+  ManyToOne,
+} from "typeorm";
 
-// import DefaultCoulmnsEntity from "./Entity";
-// import User from "./User";
+import { id_generator } from "../utils/id_generator.utils";
+import { slugify } from "../utils/slugify.utils";
 
-// @typeormEntity("posts")
-// export class Post extends DefaultCoulmnsEntity {
-//   constructor(post: Partial<Post>) {
-//     super();
-//     Object.assign(this, post);
-//   }
-//   @Index()
-//   @Column()
-//   indentifier: string; // id
+import DefaultCoulmnsEntity from "./DefaultColumnsEntity";
+import { Sub } from "./Sub";
+import User from "./User";
 
-//   @Column()
-//   @IsNotEmpty({ message: "Title must not be empty" })
-//   title: string;
+@typeormEntity("posts")
+export class Post extends DefaultCoulmnsEntity {
+  constructor(post: Partial<Post>) {
+    super();
+    Object.assign(this, post);
+  }
+  @Index()
+  @Column()
+  indentifier: string; // id
 
-//   @Index()
-//   @Column()
-//   slug: string; // Slug for a id
+  @Column()
+  @IsNotEmpty({ message: "Title must not be empty" })
+  title: string;
 
-//   @Column({ nullable: true, type: "text" })
-//   body: string;
+  @Index()
+  @Column()
+  slug: string; // Slug for a id
 
-//   @Column()
-//   sub: string;
+  @Column({ nullable: true, type: "text" })
+  body: string;
 
-//   @ManyToOne(() => User, (user) => user.posts)
-//   @JoinColumn({ name: "username", referencedColumnName: "username" })
-//   user: User;
-// }
+  @Column()
+  subName: string;
+
+  @ManyToOne(() => User, (user) => user.posts)
+  @JoinColumn({ name: "username", referencedColumnName: "username" })
+  user: User;
+
+  @ManyToOne(() => Sub, (sub) => sub.posts)
+  @JoinColumn({ name: "subName", referencedColumnName: "name" })
+  sub: Sub;
+
+  // Hashes password before saving
+  @BeforeInsert()
+  generateIdAndSlugify() {
+    this.indentifier = id_generator(8);
+    this.slug = slugify(this.title);
+  }
+}
