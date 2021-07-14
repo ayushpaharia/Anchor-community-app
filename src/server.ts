@@ -5,7 +5,7 @@ import morgan from "morgan";
 import express, { Response } from "express";
 import cookieParser from "cookie-parser";
 
-import { authRoutes } from "./routes";
+import { authRoutes, postRoutes } from "./routes";
 import trim from "./middlewares/trim";
 
 const app = express();
@@ -26,6 +26,7 @@ app.get("/", (_, res: Response) => {
 
 // Routes
 app.use("/api/auth", authRoutes);
+app.use("/api/posts", postRoutes);
 
 console.clear();
 app.listen(port, async () => {

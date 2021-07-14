@@ -1,27 +1,25 @@
 import { IsEmail, Length, Matches, IsNotEmpty } from "class-validator";
 import {
-  Entity,
-  PrimaryGeneratedColumn,
+  Entity as typeorm_Entity,
   Column,
-  BaseEntity,
   Index,
-  CreateDateColumn,
-  UpdateDateColumn,
   BeforeInsert,
+  OneToMany,
 } from "typeorm";
 import bcrypt from "bcrypt";
 import config from "config";
-import { classToPlain, Exclude } from "class-transformer";
+import { Exclude } from "class-transformer";
 
-@Entity("users")
-export class User extends BaseEntity {
+import DefaultCoulmnsEntity from "./Entity";
+// import { postRoutes } from "../routes";
+// import { Post } from "./Post";
+
+@typeorm_Entity("users")
+export default class User extends DefaultCoulmnsEntity {
   constructor(user: Partial<User>) {
     super();
     Object.assign(this, user);
   }
-  @Exclude()
-  @PrimaryGeneratedColumn()
-  id: number;
 
   @Index()
   @IsNotEmpty({ message: "Must have an email property" })
@@ -49,21 +47,14 @@ export class User extends BaseEntity {
   })
   password: string;
 
-  @CreateDateColumn()
-  createdAt: Date;
-
-  @UpdateDateColumn()
-  updatedAt: Date;
+  // @OneToMany(() => Post, (post) => post.user)
+  // posts: Post[];
 
   // Hashes password before saving
   @BeforeInsert()
-  async hashWithBCryptc() {
+  async hashWithBCrypt() {
     const salt = await bcrypt.genSalt(config.get("saltWorkFactor"));
 
     this.password = bcrypt.hashSync(this.password, salt);
-  }
-
-  toJSON() {
-    return classToPlain(this);
   }
 }

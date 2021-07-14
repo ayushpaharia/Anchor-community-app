@@ -2,8 +2,10 @@ import { Router } from "express";
 import {
   registerUserHandler,
   loginUserHandler,
-  getProfileHandler,
+  getMyProfileHandler,
+  logoutHandler,
 } from "../controllers/auth.controller";
+import isAuthenticated from "../middlewares/isAuthenticated";
 
 const authRoutes = Router();
 
@@ -20,9 +22,15 @@ authRoutes.post("/register", registerUserHandler);
 authRoutes.post("/login", loginUserHandler);
 
 /**
- * @route   POST /api/auth/me
+ * @route   GET /api/auth/me
  * @desc    Login a user
  */
-authRoutes.get("/me", getProfileHandler);
+authRoutes.get("/me", isAuthenticated, getMyProfileHandler);
+
+/**
+ * @route   GET /api/auth/me
+ * @desc    Login a user
+ */
+authRoutes.get("/logout", isAuthenticated, logoutHandler);
 
 export default authRoutes;
