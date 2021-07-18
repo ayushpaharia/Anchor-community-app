@@ -6,24 +6,26 @@ import {
   Index,
   JoinColumn,
   ManyToOne,
+  OneToMany,
 } from "typeorm";
 
 import { id_generator } from "../utils/id_generator.utils";
 import { slugify } from "../utils/slugify.utils";
+import Comment from "./Comment";
 
 import DefaultCoulmnsEntity from "./DefaultColumnsEntity";
-import { Sub } from "./Sub";
+import Sub from "./Sub";
 import User from "./User";
 
 @typeormEntity("posts")
-export class Post extends DefaultCoulmnsEntity {
+export default class Post extends DefaultCoulmnsEntity {
   constructor(post: Partial<Post>) {
     super();
     Object.assign(this, post);
   }
   @Index()
   @Column()
-  indentifier: string; // id
+  identifier: string; // id
 
   @Column()
   @IsNotEmpty({ message: "Title must not be empty" })
@@ -43,14 +45,19 @@ export class Post extends DefaultCoulmnsEntity {
   @JoinColumn({ name: "username", referencedColumnName: "username" })
   user: User;
 
-  @ManyToOne(() => Sub, (sub) => sub.posts)
+  @ManyToOne(() => Sub, (sub) => sub.posts) 
   @JoinColumn({ name: "subName", referencedColumnName: "name" })
   sub: Sub;
+
+  @OneToMany(() => Comment, (comment) => comment.post)
+  @JoinColumn({ name: "subName", referencedColumnName: "name" })
+
+  comments: Comment[];
 
   // Hashes password before saving
   @BeforeInsert()
   generateIdAndSlugify() {
-    this.indentifier = id_generator(8);
+    this.identifier = id_generator(8);
     this.slug = slugify(this.title);
   }
 }

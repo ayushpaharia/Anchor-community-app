@@ -1,7 +1,9 @@
 import { Request, Response } from "express";
 import { omit } from "lodash";
-import { Post } from "../entities/Post";
-import { Sub } from "../entities/Sub";
+import Comment from "../entities/Comment";
+
+import Post from "../entities/Post";
+import Sub from "../entities/Sub";
 
 export const createPostHandler = async (req: Request, res: Response) => {
   const { title, body, sub } = req.body;
@@ -21,6 +23,7 @@ export const createPostHandler = async (req: Request, res: Response) => {
       "user.updatedAt",
       "user.createdAt",
       "updatedAt",
+      "sub.updatedAt",
     ]);
 
     // Return the user
@@ -34,18 +37,54 @@ export const createPostHandler = async (req: Request, res: Response) => {
   }
 };
 
-export const getPostHandler = async (req: Request, res: Response) => {};
+export const getPostHandler = async (req: Request, res: Response) => {
+  const { identifier, slug } = req.params;
 
-export const getAllPostHandler = async (req: Request, res: Response) => {};
+  try {
+    const existingPost = await Post.findOneOrFail(
+      { identifier, slug },
+      { relations: ["sub", "comments"] }
+    );
 
-export const editPostHandler = async (req: Request, res: Response) => {};
+    return res.status(200).json({ post: existingPost });
+  } catch (error) {
+    return res.status(404).json({ error });
+  }
+};
 
-export const deletePostHandler = async (req: Request, res: Response) => {};
+export const getAllPostHandler = async (_: Request, res: Response) => {
+  try {
+    const allPosts = await Post.find({
+      order: { createdAt: "DESC" },
+      // relations: ["sub"],
+    });
 
-export default {
-  createPostHandler,
-  getPostHandler,
-  getAllPostHandler,
-  editPostHandler,
-  deletePostHandler,
+    return res.status(200).json({ post: allPosts });
+  } catch (error) {
+    return res.status(500).json({ error: "Something went wrong" });
+  }
+};
+
+export const editPostHandler = async (_req: Request, _res: Response) => {};
+
+export const deletePostHandler = async (_req: Request, _res: Response) => {};
+
+export const commentOnPostHandler = async (req: Request, res: Response) => {
+  const { identifier, slug } = req.params;
+  const { body } = req.body;
+  try {
+    const existingPost = await Post.findOneOrFail({ identifier, slug });
+
+    const comment = new Comment({
+      body,
+      user: res.locals.user,
+      post: existingPost,
+    });
+
+    await comment.save();
+
+    return res.status(200).json({ comment });
+  } catch (error) {
+    return res.status(404).json({ error: "Post not found" });
+  }
 };

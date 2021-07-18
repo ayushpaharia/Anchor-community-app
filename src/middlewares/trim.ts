@@ -1,6 +1,6 @@
 import { Request, NextFunction, Response } from "express";
 
-export default (req: Request, res: Response, next: NextFunction) => {
+export default (req: Request, _res: Response, next: NextFunction) => {
   const exceptions = ["password"];
 
   Object.keys(req.body).forEach((key) => {

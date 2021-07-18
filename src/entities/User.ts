@@ -5,14 +5,14 @@ import {
   Index,
   BeforeInsert,
   OneToMany,
+  JoinColumn,
 } from "typeorm";
 import bcrypt from "bcrypt";
 import config from "config";
 import { Exclude } from "class-transformer";
 
 import DefaultCoulmnsEntity from "./DefaultColumnsEntity";
-import { postRoutes } from "../routes";
-import { Post } from "./Post";
+import Post from "./Post";
 
 @typeorm_Entity("users")
 export default class User extends DefaultCoulmnsEntity {
@@ -48,6 +48,7 @@ export default class User extends DefaultCoulmnsEntity {
   password: string;
 
   @OneToMany(() => Post, (post) => post.user)
+  @JoinColumn({ name: "username", referencedColumnName: "username" })
   posts: Post[];
 
   // Hashes password before saving

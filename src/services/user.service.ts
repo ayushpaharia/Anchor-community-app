@@ -2,7 +2,7 @@ import User from "../entities/User";
 
 export async function findExistingUser(query: User, method?: string) {
   try {
-    const existingUser: User = await User.findOne({
+    const existingUser: User | undefined = await User.findOne({
       where: [{ username: query?.username }, { email: query?.email }],
     });
 

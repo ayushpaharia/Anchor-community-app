@@ -10,11 +10,11 @@ import {
 } from "typeorm";
 
 import DefaultCoulmnsEntity from "./DefaultColumnsEntity";
-import { Post } from "./Post";
+import Post from "./Post";
 import User from "./User";
 
 @typeormEntity("subs")
-export class Sub extends DefaultCoulmnsEntity {
+export default class Sub extends DefaultCoulmnsEntity {
   constructor(sub: Partial<Sub>) {
     super();
     Object.assign(this, sub);

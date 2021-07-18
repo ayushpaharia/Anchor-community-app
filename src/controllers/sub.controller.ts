@@ -1,9 +1,12 @@
 import { Request, Response } from "express";
+import { omit } from "lodash";
 import { getRepository } from "typeorm";
-import { Sub } from "../entities/Sub";
+import Sub from "../entities/Sub";
 import User from "../entities/User";
 
-export const createSubHandler = async (req: Request, res: Response) => {
+type NewType = Request;
+
+export const createSubHandler = async (req: NewType, res: Response) => {
   const { name, title, description } = req.body;
   const user: User = res.locals.user;
   try {
@@ -18,21 +21,28 @@ export const createSubHandler = async (req: Request, res: Response) => {
   }
 
   try {
-    const sub = new Sub({ name, description, title, user });
-    await sub.save();
+    const newSub = new Sub({ name, description, title, user });
+    await newSub.save();
+
+    const sub = omit(newSub.toJSON(), [
+      "user.updatedAt",
+      "user.createdAt",
+      "updatedAt",
+    ]);
+
     return res.json({ message: "Sub created successfully", sub });
-  } catch (error ) {
-    res.status(500).json({ message: "Something went wrong", error });
+  } catch (error) {
+    return res.status(500).json({ error: "Something went wrong" });
   }
 };
 
-export const getSubHandler = async (req: Request, res: Response) => {};
+export const getSubHandler = async (_req: Request, _res: Response) => {};
 
-export const getAllSubsHandler = async (req: Request, res: Response) => {};
+export const getAllSubsHandler = async (_req: Request, _res: Response) => {};
 
-export const editSubHandler = async (req: Request, res: Response) => {};
+export const editSubHandler = async (_req: Request, _res: Response) => {};
 
-export const deleteSubHandler = async (req: Request, res: Response) => {};
+export const deleteSubHandler = async (_req: Request, _res: Response) => {};
 
 export default {
   createSubHandler,

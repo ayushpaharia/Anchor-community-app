@@ -5,6 +5,7 @@ import {
   getAllPostHandler,
   editPostHandler,
   deletePostHandler,
+  commentOnPostHandler,
 } from "../controllers/post.controller";
 import isAuthenticated from "../middlewares/isAuthenticated";
 // import isAuthenticated from "../middlewares/isAuthenticated";
@@ -18,10 +19,10 @@ const postRoutes = Router();
 postRoutes.post("/", isAuthenticated, createPostHandler);
 
 /**
- * @route   GET /api/posts/:postid
+ * @route   GET /api/posts/:identifier/:slug
  * @desc    Get a single post
  */
-postRoutes.get("/:postid", getPostHandler);
+postRoutes.get("/:identifier/:slug", getPostHandler);
 
 /**
  * @route   GET ALL /api/posts
@@ -30,15 +31,25 @@ postRoutes.get("/:postid", getPostHandler);
 postRoutes.get("/", getAllPostHandler);
 
 /**
- * @route   PUT /api/posts/:postid
+ * @route   PUT /api/posts/:identifier/:slug
  * @desc    Edit one post
  */
-postRoutes.put("/:postid", editPostHandler);
+postRoutes.put("/:identifier/:slug", isAuthenticated, editPostHandler);
 
 /**
- * @route   DELETE /api/posts/:postid
+ * @route   DELETE /api/posts/:identifier/:slug
  * @desc    Delete a post
  */
-postRoutes.delete("/:postid", deletePostHandler);
+postRoutes.delete("/:identifier/:slug", isAuthenticated, deletePostHandler);
+
+/**
+ * @route   POST /api/posts/:identifier/:slug/comments
+ * @desc    Comment on a post
+ */
+postRoutes.post(
+  "/:identifier/:slug/comments",
+  isAuthenticated,
+  commentOnPostHandler
+);
 
 export default postRoutes;

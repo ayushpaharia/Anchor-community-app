@@ -10,6 +10,8 @@ export default async (req: Request, res: Response, next: NextFunction) => {
 
     const { valid, expired, decoded }: any = decode(token);
 
+    console.log({ valid, expired });
+
     const { existingUser } = await findExistingUser(decoded, "return");
     if (!existingUser) throw new Error("Unauthenticated");
     res.locals.user = existingUser;
