@@ -1,0 +1,31 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  font-family: "Platform", sans-serif;
+}
+
+.placeholder-size::placeholder {
+  font-size: 1rem;
+}
+.placeholder-uppercase::placeholder {
+  text-transform: uppercase;
+}
+.placeholder-tracking::placeholder {
+  letter-spacing: 0.9px;
+}
+.placeholder-black::placeholder {
+  font-weight: 900;
+}
+
+.custom-underline::after {
+  position: absolute;
+  content: "";
+  height: 4px;
+  bottom: -10px;
+  margin: 0 auto;
+  left: 0;
+  width: 50%;
+  background: rgb(0, 0, 0);
+}

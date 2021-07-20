@@ -11,6 +11,7 @@
     "@types/lodash": "^4.14.171",
     "@types/morgan": "^1.9.3",
     "@types/node": "^16.0.1",
+    "@types/react": "^17.0.14",
     "@types/yup": "^0.29.13",
     "morgan": "^1.10.0",
     "ts-node": "^10.1.0",
