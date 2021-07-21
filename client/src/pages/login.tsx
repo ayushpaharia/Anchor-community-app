@@ -7,25 +7,6 @@ import { useState } from "react";
 
 export default function Register(): JSX.Element {
   const [isPasswordType, setPasswordType] = useState(true);
-
-  const defaultValues = {
-    username: "",
-    email: "",
-    phoneno: "",
-    password: "",
-  };
-  const [formValues, setFormValues] = useState({ ...defaultValues });
-
-  function handleInputChange(e) {
-    const { name, value } = e.target;
-    setFormValues((prevValues) => ({ ...prevValues, [name]: value }));
-  }
-
-  function clearForm() {
-    setFormValues({ ...defaultValues });
-  }
-
-  const { username, email, phoneno, password } = formValues;
   return (
     <div className="flex">
       <Head>
@@ -38,52 +19,36 @@ export default function Register(): JSX.Element {
       ></div>
 
       <div className="flex flex-col w-5/12 h-screen px-16 py-24 lg:py-24 md:py-12">
+        <h1 className="mb-2 text-5xl font-black">Join Us!</h1>
+        <p className="mb-10 text-lg">
+          By signing up you agree to our <br />
+          <span className="text-blue-600 underline hover:no-underline">
+            Privacy Policy
+          </span>{" "}
+          and{" "}
+          <span className="text-blue-600 underline hover:no-underline">
+            Terms and Conditions
+          </span>{" "}
+          <br />
+          Senpai ...
+        </p>
         <ul className="flex flex-col justify-between h-full">
           <li className="relative w-20 mb-8 text-3xl font-black tracking-tight custom-underline whitespace-nowrap">
-            Sign In
+            Log In
           </li>
 
           <li className="flex ">
             <input
-              name="username"
-              value={username}
               type="text"
               className="w-full p-2 py-4 pl-6 mb-6 text-xl font-black border-black rounded-md border-3 placeholder-size"
               placeholder="Username"
-              onChange={handleInputChange}
             />
           </li>
-
-          <li className="flex ">
-            <input
-              value={email}
-              name="email"
-              type="email"
-              className="w-full p-2 py-4 pl-6 mb-6 text-xl font-black border-black rounded-md border-3 placeholder-size"
-              placeholder="Email"
-              onChange={handleInputChange}
-            />
-          </li>
-
-          <li className="flex ">
-            <input
-              value={phoneno}
-              name="phoneno"
-              type="text"
-              className="w-full p-2 py-4 pl-6 mb-6 text-xl font-black border-black rounded-md border-3 placeholder-size"
-              placeholder="Phone no"
-              onChange={handleInputChange}
-            />
-          </li>
-
           <li className="flex">
             <input
-              value={password}
-              name="password"
               type={isPasswordType ? "password" : "text"}
               className="w-full p-2 py-4 pl-6 text-xl font-black border-black rounded-md border-3 placeholder-size"
               placeholder="Password"
-              onChange={handleInputChange}
             />
             <span
               className="my-auto absoulte negative-margin-left"
@@ -98,15 +63,8 @@ export default function Register(): JSX.Element {
               )}
             </span>
           </li>
-
           <li className="flex flex-col items-center justify-between mt-10">
-            <button
-              className="p-6 bg-black border-gray-700 rounded-lg border-b-6 active:border-0 active:mt-1.5"
-              onClick={() => {
-                console.log(formValues);
-                clearForm();
-              }}
-            >
+            <button className="p-6 bg-black border-gray-700 rounded-lg border-b-6 active:border-0 active:mt-1.5 ">
               <BiRightArrow color="white" />
             </button>
 

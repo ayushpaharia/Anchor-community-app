@@ -29,3 +29,11 @@
   width: 50%;
   background: rgb(0, 0, 0);
 }
+
+.negative-margin-left {
+  margin-left: -3.5rem;
+}
+
+.border-b-0-hover:hover {
+  border: none;
+}
