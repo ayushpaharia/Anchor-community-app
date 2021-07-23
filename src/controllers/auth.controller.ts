@@ -8,6 +8,7 @@ import { sign } from "../utils/jwt.utils";
 import { findExistingUser } from "../services/user.service";
 import { validate } from "class-validator";
 import { omit } from "lodash";
+import { errorHelper } from "../utils/error_helper";
 
 export const registerUserHandler = async (req: Request, res: Response) => {
   const { email, username, password, passwordConfirmation } = req.body;
@@ -27,8 +28,10 @@ export const registerUserHandler = async (req: Request, res: Response) => {
     const newUser = new User({ email, username, password });
     const validationErrors = await validate(newUser);
 
+    const finalErrors = errorHelper(validationErrors);
+
     if (validationErrors.length !== 0)
-      return res.status(400).json({ errors: validationErrors });
+      return res.status(400).json({ errors: finalErrors });
     await newUser.save();
 
     // Return the user

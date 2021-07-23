@@ -22,7 +22,7 @@ export default class User extends DefaultCoulmnsEntity {
   }
 
   @Index()
-  @IsNotEmpty({ message: "Must have an email property" })
+  @IsNotEmpty({ message: "Must be a valid email property" })
   @IsEmail({}, { message: "Must be a valid email" })
   @Column({ unique: true })
   email: string;

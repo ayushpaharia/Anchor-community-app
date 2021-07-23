@@ -124,7 +124,7 @@ export default function Register(): JSX.Element {
           </li>
           <li className="flex flex-col items-center justify-between mt-10">
             <button
-              className="px-6 py-4  bg-black border-gray-700 rounded-lg border-b-6 active:border-0 active:mt-1.5 text-white font-black text-2xl"
+              className="px-6 py-4 transition duration-500 bg-blue-500  border-blue-700 rounded-lg border-b-6 active:border-0 active:mt-1.5 text-white font-black text-2xl"
               onClick={() => {
                 console.log(formValues);
                 clearForm();

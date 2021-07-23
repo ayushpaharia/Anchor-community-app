@@ -9,6 +9,9 @@ module.exports = {
   },
   plugins: [],
   theme: {
+    fontFamily: {
+      body: ["Platform"],
+    },
     borderWidth: {
       0: "0",
       2: "2px",
