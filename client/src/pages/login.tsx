@@ -1,32 +1,33 @@
-import Head from "next/head";
-import image from "../images/background.jpg";
-import {
-  AiOutlineEyeInvisible,
-  AiOutlineEye,
-  AiOutlineTwitter,
-  AiFillGithub,
-} from "react-icons/ai";
-import { FcGoogle } from "react-icons/fc";
 import { useState } from "react";
+import Head from "next/head";
 import Link from "next/link";
+import axios from "axios";
+
+import { AiOutlineTwitter, AiFillGithub } from "react-icons/ai";
+import { FcGoogle } from "react-icons/fc";
+import { AiOutlineEyeInvisible, AiOutlineEye } from "react-icons/ai";
+
+import image from "../images/background.jpg";
+import Button from "../components/Button";
+import useForm from "../helpers/formHelper";
 
 export default function Register(): JSX.Element {
   const [isPasswordType, setPasswordType] = useState(true);
 
-  const defaultValues = {
-    username: "",
-    password: "",
-  };
-  const [formValues, setFormValues] = useState({ ...defaultValues });
+  const { formValues, handleInputChange, clearForm, fillTestValues } =
+    useForm();
 
-  function handleInputChange(e) {
-    const { name, value } = e.target;
-    setFormValues((prevValues) => ({ ...prevValues, [name]: value }));
+  async function login() {
+    try {
+      await axios.post("/auth/register", {
+        password: formValues.password,
+        username: formValues.username,
+      });
+    } catch (error) {
+      console.log(error);
+    }
   }
 
-  function clearForm() {
-    setFormValues({ ...defaultValues });
-  }
   const { username, password } = formValues;
 
   return (
@@ -35,12 +36,12 @@ export default function Register(): JSX.Element {
         <title>Register</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <div
-        className="w-7/12 h-screen bg-center bg-cover"
+      <image
+        className="w-7/12 h-screen bg-center bg-cover xs:hidden sm:block"
         style={{ backgroundImage: `url(${image.src})` }}
-      ></div>
+      />
 
-      <div className="flex flex-col w-5/12 h-screen px-16 py-24 lg:py-24 md:py-12">
+      <div className="flex flex-col h-screen px-16 py-24 lg:py-24 md:py-12 xs:w-screen sm:w-5/12">
         <ul className="flex flex-col h-full">
           <li className="relative w-20 mb-12 text-3xl font-black tracking-tight custom-underline whitespace-nowrap">
             Log In
@@ -59,6 +60,7 @@ export default function Register(): JSX.Element {
 
           <li className="flex">
             <input
+              name="password"
               value={password}
               type={isPasswordType ? "password" : "text"}
               className="w-full py-3 pl-6 text-xl font-black border-black rounded-md border-3 placeholder-size"
@@ -80,29 +82,35 @@ export default function Register(): JSX.Element {
           </li>
 
           <li className="flex justify-center mt-10 space-x-10">
-            <button className="p-3 bg-gray-100 border-gray-300 rounded-lg border-b-6 active:border-0 active:mt-1.5">
-              <FcGoogle size="2em" />
+            <button className="p-3 bg-gray-100 border-gray-300 rounded-lg border-b-6 active:border-0 active:mt-1.5 xs:text-3xl xl:text-3xl lg:text-2xl ">
+              <FcGoogle />
             </button>
-            <button className="p-3 bg-blue-300 border-blue-500 rounded-lg border-b-6 active:border-0 active:mt-1.5">
-              <AiOutlineTwitter size="2em" color="white" />
+            <button className="p-3 bg-blue-300 border-blue-500 rounded-lg border-b-6 active:border-0 active:mt-1.5 xs:text-3xl xl:text-3xl lg:text-2xl">
+              <AiOutlineTwitter color="white" />
             </button>
-            <button className="p-3 bg-black border-gray-500 rounded-lg border-b-6 active:border-0 active:mt-1.5">
-              <AiFillGithub size="2em" color="white" />
+            <button className="p-3 bg-black border-gray-500 rounded-lg border-b-6 active:border-0 active:mt-1.5 xs:text-3xl xl:text-3xl lg:text-2xl">
+              <AiFillGithub color="white" />
             </button>
           </li>
           <li className="flex-grow"></li>
 
-          <li className="flex flex-col items-center justify-between mt-10">
-            <button
-              className="px-6 py-4  bg-black border-gray-700 rounded-lg border-b-6 active:border-0 active:mt-1.5 text-white font-black text-2xl"
-              onClick={() => {
-                console.log(formValues);
-                clearForm();
-              }}
-            >
-              Login
-            </button>
-
+          <li className="flex justify-center mt-10 ">
+            <div className="flex flex-row space-x-8 ">
+              <Button
+                myActionFunction={clearForm}
+                name="Clear Form"
+                style="yellow"
+              />
+              {/* <Button myActionFunction={login} name="Login" style="green" /> */}
+              {/* <Button
+                myActionFunction={fillTestValues}
+                name="Prefill"
+                style="purple"
+                type="dark"
+              /> */}
+            </div>
+          </li>
+          <li className="flex justify-center">
             <span className="mt-3">
               Or{" "}
               <span className="text-blue-600 underline hover:no-underline">

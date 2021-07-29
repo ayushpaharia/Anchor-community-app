@@ -11,7 +11,7 @@ import { omit } from "lodash";
 import { errorHelper } from "../utils/error_helper";
 
 export const registerUserHandler = async (req: Request, res: Response) => {
-  const { email, username, password, passwordConfirmation } = req.body;
+  const { email, username, password, passwordConfirmation, phoneno } = req.body;
   try {
     // Check if user exists
     const { existingUser, errors } = await findExistingUser(req.body);
@@ -25,7 +25,7 @@ export const registerUserHandler = async (req: Request, res: Response) => {
         .json({ errors: "Password confirmation doesn't match" });
 
     // Create the user
-    const newUser = new User({ email, username, password });
+    const newUser = new User({ email, username, password, phoneno });
     const validationErrors = await validate(newUser);
 
     const finalErrors = errorHelper(validationErrors);

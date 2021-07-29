@@ -35,6 +35,14 @@ export default class User extends DefaultCoulmnsEntity {
   @Column({ unique: true })
   username: string;
 
+  @Index()
+  @IsNotEmpty({ message: "Must have an phoneno property" })
+  @Length(10, 10, {
+    message: "Phone number is invalid",
+  })
+  @Column({ unique: true })
+  phoneno: string;
+
   @Exclude()
   @Column()
   @IsNotEmpty({ message: "Must have an password property" })

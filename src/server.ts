@@ -4,6 +4,7 @@ import config from "config";
 import morgan from "morgan";
 import express, { Response } from "express";
 import cookieParser from "cookie-parser";
+import cors from "cors";
 
 import { authRoutes, postRoutes, subRoutes } from "./routes";
 import trim from "./middlewares/trim";
@@ -14,6 +15,7 @@ app.use(cookieParser(config.get("cookie_secret")));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan("dev"));
+app.use(cors());
 app.use(trim);
 
 const port = config.get("port") as number;

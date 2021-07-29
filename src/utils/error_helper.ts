@@ -2,12 +2,18 @@ import { ValidationError } from "class-validator";
 
 export function errorHelper(validationErrors: ValidationError[]) {
   try {
-    let finalErrors: string[] = [];
-    validationErrors.map((error) => {
-      const validationError = error.constraints;
-      finalErrors = [...finalErrors, ...Object.values(validationError!)];
-    });
-    console.log(finalErrors);
+    // validationErrors.map((error) => {
+    //   const validationError = error.constraints;
+    //   finalErrors = [...finalErrors, ...Object.values(validationError!)];
+    // });
+
+    const finalErrors: string[] = validationErrors.reduce(
+      (prev: any, current: any) => {
+        prev[current.property] = Object.values(current.constraints);
+        return prev;
+      },
+      {}
+    );
 
     return finalErrors;
   } catch (err) {

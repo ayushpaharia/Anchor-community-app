@@ -1,41 +1,45 @@
 import Head from "next/head";
-// import styles from "../styles/Home.module.css";
-import image from "../images/background.jpg";
-import { AiOutlineEyeInvisible, AiOutlineEye } from "react-icons/ai";
-import { useState } from "react";
 import Link from "next/link";
+import React, { useState } from "react";
+import axios from "axios";
+
+import { AiOutlineEyeInvisible, AiOutlineEye } from "react-icons/ai";
+
+import image from "../images/background.jpg";
+import useForm from "../helpers/formHelper";
+import Button from "../components/Button";
 
 export default function Register(): JSX.Element {
-  const [isPasswordType, setPasswordType] = useState(true);
+  const [isPasswordType, setPasswordType] = useState<boolean>(true);
 
-  const defaultValues = {
-    username: "",
-    email: "",
-    phoneno: "",
-    password: "",
-  };
-  const [formValues, setFormValues] = useState({ ...defaultValues });
-
-  function handleInputChange(e) {
-    const { name, value } = e.target;
-    setFormValues((prevValues) => ({ ...prevValues, [name]: value }));
-  }
-
-  function clearForm() {
-    setFormValues({ ...defaultValues });
-  }
+  const { formValues, handleInputChange, clearForm, fillTestValues } =
+    useForm();
 
   const { username, email, phoneno, password } = formValues;
+  async function registerUser() {
+    try {
+      await axios.post("/auth/register", {
+        username,
+        email,
+        phoneno,
+        password,
+        passwordConfirmation: formValues.password,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   return (
     <div className="flex">
       <Head>
         <title>Register</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <div
+      <image
         className="w-7/12 h-screen bg-center bg-cover"
         style={{ backgroundImage: `url(${image.src})` }}
-      ></div>
+      />
 
       <div className="flex flex-col w-5/12 h-screen px-16 py-24 md:py-12">
         <h1 className="mb-2 text-3xl font-black">Join Us!</h1>
@@ -81,10 +85,10 @@ export default function Register(): JSX.Element {
           <li className="flex ">
             <input
               value={phoneno}
-              name="phoneno"
+              name="phone no"
               type="text"
               className="w-full py-3 pl-6 mb-6 text-xl font-black border-black rounded-md border-3 placeholder-size"
-              placeholder="Phone no"
+              placeholder="Phoneno"
               onChange={handleInputChange}
             />
           </li>
@@ -123,15 +127,24 @@ export default function Register(): JSX.Element {
             </span>
           </li>
           <li className="flex flex-col items-center justify-between mt-10">
-            <button
-              className="px-6 py-4 transition duration-500 bg-blue-500  border-blue-700 rounded-lg border-b-6 active:border-0 active:mt-1.5 text-white font-black text-2xl"
-              onClick={() => {
-                console.log(formValues);
-                clearForm();
-              }}
-            >
-              Sign Up
-            </button>
+            <div className="flex space-x-8">
+              <Button
+                myActionFunction={registerUser}
+                name="Sign Up"
+                type="dark"
+              />
+              <Button
+                myActionFunction={clearForm}
+                name="Clear Form"
+                style="pink"
+              />
+              <Button
+                myActionFunction={fillTestValues}
+                name="Prefill"
+                style="red"
+                type="dark"
+              />
+            </div>
 
             <span className="mt-3">
               Or{" "}
